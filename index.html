@@ -1,0 +1,43 @@
+<form id="formDevis">
+  <input type="text" name="nom" placeholder="Votre nom" required />
+  <input type="email" name="email" placeholder="Votre email" required />
+  <input type="date" name="date_evenement" required />
+  <input type="text" name="lieu" placeholder="Lieu de l’événement" required />
+  <input type="text" name="type_evenement" placeholder="Type d’événement" required />
+  <textarea name="message" placeholder="Votre message" required></textarea>
+  <button type="submit">Envoyer</button>
+</form>
+
+<script>
+  document.getElementById('formDevis').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const data = {
+      nom: form.nom.value,
+      email: form.email.value,
+      date_evenement: form.date_evenement.value,
+      lieu: form.lieu.value,
+      type_evenement: form.type_evenement.value,
+      message: form.message.value
+    };
+
+    try {
+      const res = await fetch('https://dotasolution.app.n8n.cloud/webhook-test/Devis-event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        alert(result.message || "Demande envoyée !");
+        form.reset();
+      } else {
+        alert("Une erreur est survenue.");
+      }
+    } catch (err) {
+      alert("Erreur de connexion au serveur.");
+      console.error(err);
+    }
+  });
+</script>
